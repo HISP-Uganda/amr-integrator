@@ -36,7 +36,7 @@ config = {
 
 cmd = sys.argv[1:]
 opts, args = getopt.getopt(
-    cmd, 'dy:m:',
+    cmd, 'dhy:m:',
     [])
 
 # use current month as default
@@ -44,6 +44,19 @@ now = datetime.datetime.now()
 year = now.year
 month = now.month
 DIRECT_SENDING = False
+
+
+def usage():
+    print("""
+    A Python script that generated monthly aggregate data from DISIS system &
+    submits it to DHIS 2 via a data exchange middleware
+    Usage:
+    $python monthly_report_generator.py [options]
+    -h show this message
+    -m the month for which to generate aggregate values
+    -y the year for which to generate aggregate values
+    -d whether to directly send values to DHIS 2 with out exchange middleware
+""")
 
 for option, parameter in opts:
     if option == '-d':
@@ -60,6 +73,9 @@ for option, parameter in opts:
             month = int(month)
         except:
             pass
+    if option == '-h':
+        usage()
+        sys.exit(1)
     # if option == '-f':
     #    ADD_FIELDS = True
 
@@ -101,6 +117,7 @@ def queue_in_dispatcher2(data, url=config['dispatcher2_queue_url'], ctype="json"
             'Authorization': 'Basic ' + coded.decode()},
         verify=False, params=params  # , cert=config['dispatcher2_certkey_file']
     )
+    print("<><><><><><>", response.text)
     return response
 
 cnx = mysql.connector.connect(**dbconfig)
@@ -158,7 +175,7 @@ print(organismsList)
 start_date, end_date = get_start_and_end_date(year, month)
 print (start_date, "==>", end_date)
 
-for facility_name in facilitiesList[9:11]:
+for facility_name in facilitiesList:
     print("### Going to generate data for: {0}:{1}".format(facility_name, facilities_mapping[facility_name]))
     # dispatcher2 queuing params
     extra_params = {
@@ -234,6 +251,7 @@ for facility_name in facilitiesList[9:11]:
                 'completeDate': datetime.datetime.now().strftime("%Y-%m-%d"),
                 'period': "{0}{1:02d}".format(year, month),
                 'orgUnit': facilities_mapping[facility_name],
+                'attributeOptionCombo': 'Lf2Axb9E6B4',
                 'dataValues': dataValues2
             }
             print(">>>>><<<<<<", json.dumps(payload2))
@@ -249,6 +267,7 @@ for facility_name in facilitiesList[9:11]:
             'completeDate': datetime.datetime.now().strftime("%Y-%m-%d"),
             'period': "{0}{1:02d}".format(year, month),
             'orgUnit': facilities_mapping[facility_name],
+            'attributeOptionCombo': 'Lf2Axb9E6B4',
             'dataValues': isolatesDataValues
         }
         print(">>>>>ISOLATES<<<<< FOR {0} => {1}".format(facility_name, json.dumps(payload)))
