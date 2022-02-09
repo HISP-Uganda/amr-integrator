@@ -27,10 +27,10 @@ In the same directory, you have a Python script `monthly_report_generator.py` th
 aggregation of the data to a monthly level and queues it in a data exchange middleware for submission
 to DHIS 2. 
 
-The dependencies of the script include:
+The dependencies of the script include: 
 
-    1. [requests](https://docs.python-requests.org/en/latest/)
-    2. [mysql.connector](https://dev.mysql.com/doc/connector-python/en/connector-python-installation-binary.html)
+1. [requests](https://docs.python-requests.org/en/latest/)
+2. [mysql.connector](https://dev.mysql.com/doc/connector-python/en/connector-python-installation-binary.html)
 
 
 Here is how to use the script
