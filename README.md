@@ -10,10 +10,12 @@ $ cd amr-integrator
 In the directory for the code base are two SQL files to run on your DISIS database
 
 1. `integrator.sql` has the additional tables to add to DISIS database
+
     ```bash
         $ mysql -u root -p disis_amr < ./integrator.sql
     ```
 2. `data.sql` has the data used to populate those tables
+
     ```bash
         $ mysql -u root -p disis_amr < ./data.sql
     ```
@@ -24,7 +26,9 @@ integration to work.
 In the same directory, you have a Python script `monthly_report_generator.py` that does the 
 aggregation of the data to a monthly level and queues it in a data exchange middleware for submission
 to DHIS 2. 
+
 The dependencies of the script include:
+
     1. [requests](https://docs.python-requests.org/en/latest/)
     2. [mysql.connector](https://dev.mysql.com/doc/connector-python/en/connector-python-installation-binary.html)
 
